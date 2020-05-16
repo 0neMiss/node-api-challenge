@@ -4,14 +4,13 @@ const router = express.Router();
 
 //actions action
 router.post('/', (req, res) => {
-  users.insert(req.body)
-  .then(user => {
-    res.status(201).json(user);
-
+  actions.insert(req.body)
+  .then(action => {
+    res.status(201).json(action);
   })
   .catch(error => {
     console.log(error);
-    res.status(500).json({ error: "There was an error while saving the comment to the database" });
+    res.status(500).json({ error: "There was an error while saving the action to the database" });
   });
 });
 
@@ -28,11 +27,11 @@ router.get('/', (req, res) => {
   });
 });
 //get action by ID
-router.get('/:id', validateUserId, (req, res) => {
+router.get('/:id', validateActionId, (req, res) => {
     res.status(201).json(req.action);
 });
 //delete action by ID
-router.delete('/:id', validateUserId, (req, res) => {
+router.delete('/:id', validateActionId, (req, res) => {
   const action = req.action;
   actions.remove(action.id)
   .then(count => {
@@ -48,9 +47,10 @@ router.delete('/:id', validateUserId, (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateActionId, (req, res) => {
   const changes = req.body;
-  actions.update(req.params.id, changes)
+  const action = req.action;
+  actions.update(action.id, changes)
   .then(action => {
     res.status(201).json(changes);
   })
@@ -61,9 +61,28 @@ router.put('/:id', (req, res) => {
 });
 
 
-function validateUserId(req, res, next) {
+function validateActionId(req, res, next) {
   const id = req.params.id;
-  console.log(`req.paramas.id in validateUserId: ${req.params.id}`);
+  console.log(`req.paramas.id in validateActionId: ${req.params.id}`);
+  actions.get(id)
+    .then(action =>{
+      if(action){
+        req.action = action;
+        next();
+    }
+    else{
+      res.status(404).json({error: 'user not found'});
+    }
+
+    })
+    .catch(err =>{
+      console.log(err);
+
+    })
+};
+function matchProjectId(req, res, next) {
+  const id = req.params.id;
+  console.log(`req.paramas.id in validateActionId: ${req.params.id}`);
   actions.get(id)
     .then(action =>{
       if(action){

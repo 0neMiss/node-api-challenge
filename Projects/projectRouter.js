@@ -5,8 +5,8 @@ const router = express.Router();
 //post project
 router.post('/', (req, res) => {
   projects.insert(req.body)
-  .then(user => {
-    res.status(201).json(user);
+  .then(project => {
+    res.status(201).json(project);
 
   })
   .catch(error => {
@@ -28,18 +28,18 @@ router.get('/', (req, res) => {
   });
 });
 //get project by ID
-router.get('/:id', validateUserId, (req, res) => {
+router.get('/:id', validateProjectId, (req, res) => {
     res.status(201).json(req.project);
 });
 //get project actions by project ID
-router.get('/:id',validateUserId, (req, res) => {
+router.get('/:id/actions',validateProjectId, (req, res) => {
     const project = req.project;
     projects.getProjectActions(project.id)
     .then(actions => res.status(200).json(actions))
     .catch(() => res.status(500).json({error: "error retrieving project from database."}))
 });
 //delete project
-router.delete('/:id', validateUserId, (req, res) => {
+router.delete('/:id', validateProjectId, (req, res) => {
   const project = req.project;
   projects.remove(project.id)
   .then(count => {
@@ -55,7 +55,7 @@ router.delete('/:id', validateUserId, (req, res) => {
   });
 });
 //put project by ID
-router.put('/:id', validateUserId, (req, res) => {
+router.put('/:id', validateProjectId, (req, res) => {
   const changes = req.body;
   const project = req.project;
   projects.update(project.id, changes)
@@ -69,9 +69,9 @@ router.put('/:id', validateUserId, (req, res) => {
 });
 
 //id validation middlware
-function validateUserId(req, res, next) {
+function validateProjectId(req, res, next) {
   const id = req.params.id;
-  console.log(`req.paramas.id in validateUserId: ${req.params.id}`);
+  console.log(`req.paramas.id in validateProjectId: ${req.params.id}`);
   projects.get(id)
     .then(project =>{
       if(project){
@@ -92,4 +92,7 @@ function validateUserId(req, res, next) {
 
 
 
-module.exports = router;
+module.exports = {
+  router,
+  validateProjectId
+};
