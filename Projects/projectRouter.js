@@ -14,7 +14,19 @@ router.post('/', (req, res) => {
     res.status(500).json({ error: "There was an error while saving the comment to the database" });
   });
 });
+router.post('/:id/actions', validateProjectId, (req, res) => {
+  const project = req.project;
+  projects.getProjectActions(project.id)
+  .then(actions => {
+    actions.push(req.body);
+    res.status(201).json(actions);
 
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(500).json({ error: "There was an error while saving the comment to the database" });
+  });
+});
 //get projects
 router.get('/', (req, res) => {
   console.log(req.query);
@@ -90,9 +102,25 @@ function validateProjectId(req, res, next) {
 };
 
 
+function addToActionsArr(req, res, next) {
+  const id = req.params.id;
+  actions.get(id)
+    .then(action =>{
+      if(action){
+        req.action = action;
+        next();
+    }
+    else{
+      res.status(404).json({error: 'user not found'});
+    }
 
+    })
+    .catch(err =>{
+      console.log(err);
 
-module.exports = {
-  router,
-  validateProjectId
+    })
 };
+
+
+
+module.exports = router;

@@ -77,25 +77,7 @@ function validateActionId(req, res, next) {
     })
     .catch(err =>{
       console.log(err);
-
-    })
-};
-function matchProjectId(req, res, next) {
-  const id = req.params.id;
-  console.log(`req.paramas.id in validateActionId: ${req.params.id}`);
-  actions.get(id)
-    .then(action =>{
-      if(action){
-        req.action = action;
-        next();
-    }
-    else{
-      res.status(404).json({error: 'user not found'});
-    }
-
-    })
-    .catch(err =>{
-      console.log(err);
+      res.status(500).json({})
 
     })
 };
