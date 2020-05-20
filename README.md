@@ -40,13 +40,24 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+    Server side routing, and Middleware.
+
 - [ ] Describe Middleware?
 
+    Middlware are functions that run evaluations on data coming too and from your database.
+
 - [ ] Describe a Resource?
+    A portion of your database that handles a particular type of data.
+
 
 - [ ] What can the API return to help clients know if a request was successful?
 
+
+      HTTP status'
+
 - [ ] How can we partition our application into sub-applications?
+
+      By seperating the middlware to handle specific types of data.
 
 ## Minimum Viable Product
 
